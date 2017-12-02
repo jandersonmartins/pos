@@ -1,5 +1,7 @@
 package com.br.robo.pos;
 
+import java.io.IOException;
+
 public class Robo {
 	private int[][] plano;
 
@@ -7,7 +9,10 @@ public class Robo {
 	private int x = 0;
 	private int y = 0;
 
-	public Robo() {
+	private Logger logger;
+
+	public Robo(Logger logger) {
+		this.logger = logger;
 		this.plano = new int[this.limit][this.limit];
 		this.setPosition();
 	}
@@ -32,19 +37,51 @@ public class Robo {
 		}
 	}
 
-	private void setPosition() {
-		this.clear();
-		this.plano[this.y][this.x] = 1;
+	public int moveY(boolean down) {
+		return this.incrementY(down, 1);
 	}
 
-	public int moveY(boolean down) {
+	public int moveY(boolean down, int qtd) {
+		if (qtd >= this.limit) {
+			return this.y;
+		}
+
+		return this.incrementY(down, qtd);
+	}
+
+	public int moveX(boolean right) {
+		return this.incrementX(right, 1);
+	}
+
+	public int moveX(boolean right, int qtd) {
+		if (qtd >= this.limit) {
+			return this.x;
+		}
+
+		return this.incrementX(right, qtd);
+	}
+
+	private int incrementX(boolean right, int qtd) {
+		if (right && this.canRight()) {
+			this.x += qtd;
+			this.setPosition();
+		} else {
+			if (this.canLeft()) {
+				this.x -= qtd;
+				this.setPosition();
+			}
+		}
+		return this.x;
+	}
+
+	private int incrementY(boolean down, int qtd) {
 		if (down && this.canDown()) {
-			this.y++;
+			this.y += qtd;
 			this.setPosition();
 		} else {
 			// move pra cima
 			if (this.canUp()) {
-				this.y--;
+				this.y -= qtd;
 				this.setPosition();
 			}
 		}
@@ -52,17 +89,19 @@ public class Robo {
 		return this.y;
 	}
 
-	public int moveX(boolean right) {
-		if (right && this.canRight()) {
-			this.x++;
-			this.setPosition();
-		} else {
-			if(this.canLeft()) {
-				this.x--;
-				this.setPosition();
-			}
+	private void setPosition() {
+		this.clear();
+		this.plano[this.y][this.x] = 1;
+
+		try {
+			this.logger.write(this.getLogMsg());
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-		return this.x;
+	}
+
+	private String getLogMsg() {
+		return "Posicao atual: \n Y -> " + this.y + " \n X -> " + this.x + "\n";
 	}
 
 	private boolean canUp() {
