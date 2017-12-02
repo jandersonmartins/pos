@@ -28,4 +28,13 @@
     	<scope>test</scope>
 	</dependency>
   </dependencies>
+  
+  <executions>
+   <execution>
+      <goals>
+         <goal>install</goal>
+         <goal>build</goal>
+      </goals>
+   </execution>
+</executions>
 </project>
