@@ -70,7 +70,6 @@ public class RoboTest {
 
 	@Test
 	public void naoDeveAndarMaisQueOLimiteParaADireita() {
-
 		for (int i = 0; i < 5; i++) {
 			robo.moveX(true);
 		}
@@ -88,7 +87,6 @@ public class RoboTest {
 
 	@Test
 	public void naoDeveAndarMaisQueOLimiteParaAEsquerda() {
-
 		for (int i = 0; i < 5; i++) {
 			robo.moveX(false);
 		}
